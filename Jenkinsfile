@@ -33,7 +33,7 @@ environment {
     stage('Start Container') {
       steps{
         script {
-          sh "docker run -d -p 3000:3000 choiaw1991/project_1_node"
+          sh "docker run -d -p 3000:3000 choiaw1991/project_1_node:$BUILD_NUMBER"
         }
       }
     }
