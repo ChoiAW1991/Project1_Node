@@ -30,17 +30,10 @@ environment {
       }
     }
 
-    stage('Remove Unused Docker Image') {
-      steps{
-        sh "docker rmi $imagename:$BUILD_NUMBER"
-         sh "docker rmi $imagename:latest"
-      }
-    }
-
     stage('Start Container') {
       steps{
         script {
-          sh "docker run -d -p 3000:3000 --name node-app project_1_node"
+          sh "docker run -d -p 3000:3000 choiaw1991/project_1_node"
         }
       }
     }
