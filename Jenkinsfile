@@ -1,31 +1,37 @@
 pipeline {
-  environment {
-    registry = “choiaw1991/project_1_node”
-    registryCredential = ‘dockerhub’
-    dockerImage = ‘’
-  }
   agent any
   stages {
-    stage(‘Cloning Git’) {
-      steps {
-        git ‘https://github.com/ChoiAW1991/Project1_Node'
+    stage('Cloning Git') {
+      steps {name
+        git([url: 'https://github.com/ChoiAW1991/Project1_Node', branch: 'master', credentialsId: ''])
+
       }
     }
-    stage(‘Building image’) {
+    stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + “:$BUILD_NUMBER”
+          dockerImage = docker.build imagename
         }
       }
     }
-    stage(‘Deploy Image’) {
+    stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( ‘’, registryCredential ) {
-            dockerImage.push()
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')
+
           }
         }
       }
     }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+
+      }
+    }
   }
 }
+
